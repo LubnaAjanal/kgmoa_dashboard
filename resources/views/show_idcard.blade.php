@@ -5,7 +5,6 @@
     .card {
         width: 100%;
         max-width: 400px;
-        /* Reduced max-width */
         margin: 0 auto;
         border-radius: 8px;
         box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4) !important;
@@ -14,7 +13,6 @@
         overflow: hidden;
     }
 
-    /* Header styling with Flexbox for centering text between logos */
     .card-header {
         background-color: #4b88a2;
         padding: 20px;
@@ -28,7 +26,6 @@
         border: 2px solid #4b49ac;
         border-radius: 5px;
         max-width: 70px;
-        /* Reduced logo size */
         height: auto;
     }
 
@@ -41,7 +38,6 @@
         flex: 1;
     }
 
-    /* Sub-header with event details */
     .card-sub-header {
         background-color: #ffd966;
         color: #000;
@@ -69,12 +65,11 @@
         display: inline-block;
         padding: 5px 10px;
         margin-top: 5px;
-        border: 2px solid #4b49ac; /* Adjust color and border thickness as needed */
-        border-radius: 5px; /* Optional rounded corners */
+        border: 2px solid #4b49ac;
+        border-radius: 5px;
         font-weight: bold;
     }
 
-    /* QR Code */
     .qrcode {
         display: flex;
         justify-content: center;
@@ -87,15 +82,14 @@
         height: 70px !important;
     }
 
-    /* Details section */
     .details-section {
-        padding: 15px;
-        font-size: 16px;
-        color: #333;
+        padding: 15px !important;
+        font-size: 26px !important;
+        color: #4b49ac;
     }
 
     .details-section p {
-        margin: 5px 0;
+        margin: 15px 5px;
         font-weight: bold;
     }
 </style>
@@ -130,8 +124,8 @@
         <!-- Main details section below QR code -->
         <div class="details-section">
             <p>Delegate Name: {{ $register->fullname }}</p>
-            <p>KMC No.: {{ $register->gov_id }}</p>
-            <p>Serving At: {{ $register->serving_at }}</p>
+            <p>KMC No: {{ $register->gov_id }}</p>
+            <p>Serving At: {{ $register->working_place }}</p>
             <p>Mobile No: {{ $register->mobile }}</p>
             <p>E-mail ID: {{ $register->email }}</p>
         </div>
