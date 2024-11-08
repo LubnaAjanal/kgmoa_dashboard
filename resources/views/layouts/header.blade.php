@@ -10,10 +10,11 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode/minified/html5-qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-{{-- <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script> --}}
-    {{-- @yield('header-links') --}}
 
-    <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/x-icon">
+
+    {{-- <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/x-icon"> --}}
+    <title>Karnataka Govt Medical Officers’ Association</title>
+    <link rel="icon" href="{{ asset('images/card-logo1.jpeg') }}" type="image/x-icon">
 
     <!-- plugins:css -->
     <link rel="stylesheet" href="{{ asset('vendors/feather/feather.css') }}">

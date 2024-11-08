@@ -22,7 +22,7 @@
                     <form id="login">
                         @csrf
                         <div class="brand-logo text-center">
-                            <img src="../images/logo.png" style="border-radius: 50%;" alt="logo">
+                            <img src="../images/card-logo1.jpeg" style="border-radius: 50%;" alt="logo">
                         </div>
                         <input type="text" id="email" name="email" placeholder="EMAIL" required>
                         <input type="password" id="password" name="password" placeholder="PASSWORD" required>
