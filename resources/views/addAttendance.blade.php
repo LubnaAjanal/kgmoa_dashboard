@@ -19,7 +19,7 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="registeredUsersTable">
+                        <tbody id="attendanceTable">
                             <!-- Data will be populated here by JavaScript -->
                         </tbody>
                     </table>
@@ -35,38 +35,37 @@
     <script>
         $(document).ready(function() {
             // Make the Axios request to the API endpoint
-            axios.get('/api/registers')
+            axios.get('/api/attendance')
                 .then(response => {
-                    const registers = response.data.data;
-                    const tableBody = document.getElementById('registeredUsersTable');
+                    const attendances = response.data.data;
+                    const tableBody = document.getElementById('attendanceTable');
                     tableBody.innerHTML = ''; // Clear any previous content
 
                     // Loop through the response data and populate the table
-                    registers.forEach((register, index) => {
-                        // Format the created_at date to dd-mm-yyyy
-                    const createdAtDate = new Date(register.created_at);
-                    const formattedDate = `${createdAtDate.getDate().toString().padStart(2, '0')}-${(createdAtDate.getMonth() + 1).toString().padStart(2, '0')}-${createdAtDate.getFullYear()}`;
-
+                    // Assuming 'attendances' is the response array you have
+                    if (attendances.length > 0) {
+                        attendances.forEach((attendance, index) => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${index + 1}</td>
+                                <td>${attendance.user_unique_id}</td>
+                                <!-- <td>${register.fullname}</td> -->
+                                <!-- <td>${register.mobile}</td> -->
+                                <!-- <td>${register.working_place}</td> -->
+                                <!-- <td>${formattedDate}</td> --> 
+                                <td>400</td>
+                            `;
+                            tableBody.appendChild(row);
+                        });
+                    } else {
+                        // If no attendance data, create a row with a message
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <td>${index + 1}</td>
-                            <td>${register.gov_id}</td>
-                            <td>${register.fullname}</td>
-                            <td>${register.mobile}</td>
-                            <td>${register.working_place}</td>
-                            <td>${formattedDate}</td> 
-                            <td>400</td>
-                            <td>
-                                <a href="{{ url('/api/register') }}/${register.id}/edit" style="margin-right: 10px;">
-                                    <i class="ti-credit-card" style="font-size:20px;"></i>                                  
-                                </a>
-                                <a href="#" class="" data-id="${register.id}">
-                                    <i class="ti-info-alt" style="font-size:20px;"></i>
-                                </a>
-                            </td>
-                        `;
+                                    <td colspan="5" class="text-center">No Attendees</td>
+                                    `;
                         tableBody.appendChild(row);
-                    });
+                    }
+
                 })
                 .catch(error => {
                     console.error('Error fetching registered users:', error);
@@ -74,4 +73,3 @@
         });
     </script>
 @endsection
-

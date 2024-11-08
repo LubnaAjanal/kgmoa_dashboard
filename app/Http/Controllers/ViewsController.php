@@ -21,4 +21,10 @@ class ViewsController extends Controller
         return view('settings');
     }
 
+    public function userAttendance()
+    {
+        return view('addAttendance');
+
+    }
+
 }

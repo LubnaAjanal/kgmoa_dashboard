@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ViewsController;
@@ -15,6 +16,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::controller(ViewsController::class)->group(function () {
         Route::get('/dashboard', 'index');
         Route::get('/registered-users', 'register');
+        Route::get('/user-attendance', 'userAttendance');
         Route::get('/settings', 'settings');
     });
 
@@ -24,6 +26,7 @@ Route::group(['middleware' => ['web']], function () {
     });
 
     Route::apiResource('registers', RegisterController::class);
+    Route::apiResource('attendance', AttendanceController::class);
 Route::resource('register', RegisterController::class);
 
 });

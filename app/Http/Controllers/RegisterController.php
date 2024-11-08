@@ -120,9 +120,7 @@ class RegisterController extends Controller
         $user_unique_id = $register->user_unique_id;
         $qrCode = DNS2DFacade::getBarcodeHTML($user_unique_id, 'QRCODE');
 
-        // $user_unique_id = $register->user_unique_id;
-        // $qrCode = base64_encode(DNS2DFacade::getBarcodePNG($user_unique_id, 'QRCODE'));
-        // Pass the register data to the view
+
         return view('show_idcard', [
             'register' => $register,
             'qrCode' => $qrCode

@@ -10,6 +10,12 @@
         <li class="nav-item">
             <a class="nav-link" href="{{ url('/api/registered-users') }}">
                 <i class="icon-head menu-icon"></i>
+                <span class="menu-title">Total Registereds</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url('/api/user-attendance') }}">
+                <i class="icon-head menu-icon"></i>
                 <span class="menu-title">Total Attendies</span>
             </a>
         </li>
