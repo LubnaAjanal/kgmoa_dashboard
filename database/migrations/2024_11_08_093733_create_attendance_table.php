@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('attendance', function (Blueprint $table) {
             $table->id()->index();
+            $table->unsignedBigInteger('registered_id')->index();
             $table->string('user_unique_id')->index(); // Assuming this is the ID column from the register table
             $table->timestamp('scanned_at')->useCurrent(); // Store the scan timestamp
             $table->bigInteger('count_attendance')->index();
@@ -23,7 +24,12 @@ return new class extends Migration
             $table->foreign('user_unique_id')
                   ->references('user_unique_id')
                   ->on('register')
-                  ->onDelete('cascade'); // Optional: define what happens on delete (cascade, set null, etc.)
+                  ->onDelete('cascade'); 
+
+                  $table->foreign('registered_id')
+                  ->references('id')
+                  ->on('register')
+                  ->onDelete('cascade');
         });
     }
 

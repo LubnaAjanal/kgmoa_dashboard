@@ -32,4 +32,10 @@ class Register extends Model
         'accomodation_request'
     ];
 
+    // Define the relationship with the Attendance model
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class, 'registered_id');
+    }
+
 }
