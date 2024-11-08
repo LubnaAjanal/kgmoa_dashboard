@@ -53,51 +53,74 @@ class AttendanceController extends Controller
     {
         $response = [
             'status' => false,
+            'data' => [],
             'message' => '',
         ];
     
+        // Validate the incoming user_unique_id
         $validated = $request->validate([
             'user_unique_id' => 'required|string',
         ]);
     
         try {
             // Find the user by `user_unique_id`
-            $register = Attendance::where('user_unique_id', $validated['user_unique_id'])->first();
+            $register = Register::where('user_unique_id', $validated['user_unique_id'])->first();
     
+            // If user is not found, return a 404 error response
             if (!$register) {
                 $response['message'] = 'User not found.';
                 return response()->json($response, 404);
             }
     
-            // Check the current count in the attendance record
-            if (is_null($register->count_attendance)) {
-                // Initialize count_attendance to 1 if it’s null
-                $register->count_attendance = 1;
-            } elseif ($register->count_attendance < 6) {
+            // Find or create an attendance record for this user
+            $attendance = Attendance::firstOrNew(['user_unique_id' => $validated['user_unique_id']]);
+            $attendance->registered_id = $register->id;
+    
+            // Define attendance actions for each count
+            $attendanceActions = [
+                1 => 'Attendance marked and kit given',
+                2 => 'Breakfast',
+                3 => 'Lunch',
+                4 => 'Dinner',
+                5 => 'Second day breakfast',
+                6 => 'Second day Lunch'
+            ];
+    
+            // Check and update the attendance count based on the current state
+            if (is_null($attendance->count_attendance)) {
+                // First scan, initialize count_attendance to 1
+                $attendance->count_attendance = 1;
+                $response['message'] = $attendanceActions[1];
+            } elseif ($attendance->count_attendance < 6) {
                 // Increment count_attendance if it's less than 6
-                $register->count_attendance += 1;
+                $attendance->count_attendance += 1;
+                $response['message'] = $attendanceActions[$attendance->count_attendance];
             } else {
                 // Max count of 6 reached
                 $response['message'] = 'Maximum attendance count reached.';
-                return response()->json($response, 200);
+                return response()->json($response, 200);  // Success with a message
             }
     
             // Save the updated attendance count
-            $register->save();
+            $attendance->save();
     
-            // Successful response
-            $response = [
-                'status' => true,
-                'data' => $register,
-                'message' => 'Attendance added successfully.',
+            // Successful response with updated attendance data
+            $response['status'] = true;
+            $response['data'] = [
+                'user_unique_id' => $attendance->user_unique_id,
+                'count_attendance' => $attendance->count_attendance,
             ];
+            
             return response()->json($response, 200);
     
         } catch (\Exception $e) {
             $response['message'] = 'Error updating attendance: ' . $e->getMessage();
-            return response()->json($response, 500);
+            return response()->json($response, 500);  // Internal server error
         }
     }
+    
+    
+
 
     /**
      * Display the specified resource.

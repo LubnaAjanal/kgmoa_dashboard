@@ -2,10 +2,11 @@
 
 @section('content')
     <div class="col-lg-12 grid-margin stretch-card">
-        <!-- Hidden Video Element to show the camera feed -->
         <div class="row">
             <div class="col-md-5">
                 <div id="qr-reader" style="width: 100%;"></div>
+                <button id="closeCameraBtn" class="btn btn-primary mt-2" type="button" style="display: none;">Close
+                    Camera</button>
             </div>
             <div class="col-md-7">
                 <form action="#" method="post" class="form-horizontal">
@@ -38,29 +39,26 @@
         </div>
     </div>
 
-    <!-- Ensure jQuery, Axios, and Html5Qrcode are included before this -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
     <script>
         $(document).ready(function() {
-            // Make the Axios request to the API endpoint to populate the table
+            let html5QrCode;
+
+            // Populate the attendance table
             axios.get('/api/attendance')
                 .then(response => {
                     const attendances = response.data.data;
                     const tableBody = document.getElementById('attendanceTable');
                     tableBody.innerHTML = ''; // Clear any previous content
 
-                    // Populate the table with the attendance data
                     if (attendances.length > 0) {
                         attendances.forEach((attendance, index) => {
                             const row = document.createElement('tr');
                             row.innerHTML = `
-                        <td>${index + 1}</td>
-                        <td>${attendance.gov_id}</td>
-                        <td>${attendance.fullname}</td> 
-                        <td></td>
-                    `;
+                                <td>${index + 1}</td>
+                                <td>${attendance.gov_id}</td>
+                                <td>${attendance.fullname}</td> 
+                                <td></td>
+                            `;
                             tableBody.appendChild(row);
                         });
                     } else {
@@ -75,13 +73,12 @@
 
             // Initialize QR code scanning when the "Add Attendance" button is clicked
             $('#addAttendanceBtn').on('click', function() {
-                const html5QrCode = new Html5Qrcode("qr-reader");
+                html5QrCode = new Html5Qrcode("qr-reader");
 
                 // Start QR code scanning
                 html5QrCode.start({
                         facingMode: "environment"
-                    }, // Use the rear camera
-                    {
+                    }, {
                         fps: 10,
                         qrbox: {
                             width: 250,
@@ -89,35 +86,69 @@
                         }
                     },
                     qrCodeMessage => {
-                        // Stop scanning once a QR code is detected
-                        html5QrCode.stop().then(() => {
-                            console.log("QR Code scanning stopped.");
+                        // console.log("QR Code Scanned: ", qrCodeMessage);
 
-                            // Send the scanned QR code data to the server
-                            axios.post('/api/attendance', {
-                                    qr_code: qrCodeMessage
-                                })
-                                .then(response => {
-                                    console.log("Attendance saved:", response.data.message);
-                                    alert("Attendance successfully recorded!");
+                        // Send the scanned QR code to the server
+                        axios.post('/api/attendance', {
+                                user_unique_id: qrCodeMessage
+                            })
+                            .then(response => {
+                                if (response.data.status) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success!',
+                                        text: response.data.message,
+                                        confirmButtonText: 'OK'
+                                    }).then(() => {
+                                        // window.location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error!',
+                                        text: response.data.message,
+                                        confirmButtonText: 'OK'
+                                    });
 
-                                    // Optionally, refresh the attendance table
-                                    // You could also call a function here to update the table directly without a page refresh
-                                })
-                                .catch(error => {
-                                    console.error("Error saving attendance:", error);
-                                    alert("Failed to record attendance.");
+                                }
+
+                            })
+                            .catch(error => {
+                                console.error("Error:", error);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Submission Failed!',
+                                    text: 'There was an issue submitting the attendance.',
+                                    confirmButtonText: 'OK'
                                 });
-                        }).catch(err => {
-                            console.error("Error stopping QR Code scanner:", err);
-                        });
+
+                            });
                     },
                     errorMessage => {
-                        console.warn("QR Code scanning error:", errorMessage);
+                        console.warn("Error scanning QR code:", errorMessage);
                     }
                 ).catch(err => {
                     console.error("Error starting QR Code scanner:", err);
                 });
+
+                // Hide the "Add Attendance" button and show the "Close Camera" button
+                $('#addAttendanceBtn').hide();
+                $('#closeCameraBtn').show();
+            });
+
+            // Stop the QR code scanning when "Close Camera" button is clicked
+            $('#closeCameraBtn').on('click', function() {
+                if (html5QrCode) {
+                    html5QrCode.stop().then(() => {
+                        console.log("QR Code scanning stopped.");
+
+                        // Show the "Add Attendance" button and hide the "Close Camera" button
+                        $('#addAttendanceBtn').show();
+                        $('#closeCameraBtn').hide();
+                    }).catch(err => {
+                        console.error("Error stopping QR Code scanner:", err);
+                    });
+                }
             });
         });
     </script>
