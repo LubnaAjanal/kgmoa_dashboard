@@ -12,6 +12,7 @@ class CreateAdminTable extends Migration
             $table->id()->index();
             $table->string('name');
             $table->string('email')->unique();
+            $table->bigInteger('phone');
             $table->string('password');
             $table->string('role');
             $table->softDeletes();
