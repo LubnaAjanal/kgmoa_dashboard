@@ -1,98 +1,133 @@
 @extends('layouts.main')
 
-
 <style>
+    /* Main card styling */
     .card {
-    width: 350px;
-    height: 200px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    border-radius: 8px;
-    background-color: #9a4949;
-    display: flex;
-    flex-direction: column;
-    font-family: Arial, sans-serif;
-}
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        border-radius: 8px;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4) !important;
+        background-color: #ffffff;
+        font-family: Arial, sans-serif;
+        overflow: hidden;
+    }
 
-.card-header {
-    background-color: #f8f9fa;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-}
+    .card-header {
+        background-color: #4b88a2;
+        padding: 20px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 
-.card-header img {
-    max-width: 60px;
-    height: auto;
-}
+    .card-header img {
+        border: 2px solid #4b49ac;
+        border-radius: 5px;
+        max-width: 70px;
+        height: auto;
+    }
 
-.card-header h2 {
-    margin-top: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
-}
+    .card-header h2 {
+        color: #4b49ac;
+        font-size: 24px;
+        font-weight: bold;
+        margin: 0;
+        text-align: center;
+        flex: 1;
+    }
 
-.card-body {
-    display: flex;
-    padding: 15px;
-    justify-content: space-between;
-    flex-grow: 1;
-}
+    .card-sub-header {
+        background-color: #ffd966;
+        color: #000;
+        font-weight: bold;
+        text-align: center;
+        padding: 10px;
+        font-size: 18px;
+    }
 
-.left-details, .right-details {
-    font-size: 14px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
+    .event-details {
+        color: #c70039;
+        font-weight: bold;
+        text-align: center;
+        padding: 5px;
+        font-size: 16px;
+    }
 
-.left-details p, .right-details p {
-    margin: 5px 0;
-}
+    .event-venue {
+        color: #0000ff;
+        display: block;
+        margin-top: 5px;
+    }
 
-.qrcode {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-}
+    .event-date {
+        display: inline-block;
+        padding: 5px 10px;
+        margin-top: 5px;
+        border: 2px solid #4b49ac;
+        border-radius: 5px;
+        font-weight: bold;
+    }
 
-.row {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-}
+    .qrcode {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
 
-.col-md-6 {
-    width: 48%;
-}
+    .qrcode img {
+        width: 70px !important;
+        height: 70px !important;
+    }
 
+    .details-section {
+        padding: 15px !important;
+        font-size: 26px !important;
+        color: #4b49ac;
+    }
+
+    .details-section p {
+        margin: 15px 5px;
+        font-weight: bold;
+    }
 </style>
 
 @section('content')
     <div class="card">
+        <!-- Header with logos and title -->
         <div class="card-header">
-            <img src="logo.png" alt="Logo">
+            <img src="{{ asset('images/card-logo1.jpeg') }}" alt="Logo1">
             <h2>KGMOA</h2>
+            <img src="{{ asset('images/card-logo2.jpeg') }}" alt="Logo2">
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="left-details">
-                    <p><strong>Name:</strong> {{ $register->fullname }}</p>
-                    <p><strong>Mobile No:</strong> {{ $register->mobile }}</p>
-                    <p><strong>KMC ID:</strong> {{ $register->gov_id }}</p>
-                </div>
 
-            </div>
-            <div class="col-md-6">
-                <div class="right-details">
-                    <div class="qrcode">
-                        {!! $qrCode !!}
-                    </div>
-                </div>
-            </div>
+        <!-- Sub-header with event information -->
+        <div class="card-sub-header">
+            Anubhaava-25
+        </div>
+
+        <div class="event-details p-3">
+            31st Karnataka State Govt. Doctors Conference
+            <span class="event-venue px-3 pt-2">
+                Venue: Kandgal Shri Hanumantaraya Rangmandir, Station Road, Vijayapura
+            </span>
+            <br><span class="event-date">22 & 23 Feb 2025</span>
+        </div>
+
+        <!-- QR Code Section -->
+        <div class="qrcode">
+            {!! $qrCode !!}
+        </div>
+
+        <!-- Main details section below QR code -->
+        <div class="details-section">
+            <p>Delegate Name: {{ $register->fullname }}</p>
+            <p>KMC No: {{ $register->gov_id }}</p>
+            <p>Serving At: {{ $register->working_place }}</p>
+            <p>Mobile No: {{ $register->mobile }}</p>
+            <p>E-mail ID: {{ $register->email }}</p>
         </div>
     </div>
 @endsection

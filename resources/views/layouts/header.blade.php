@@ -33,7 +33,7 @@
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
             <a class="navbar-brand brand-logo d-flex align-items-center" href="{{ url('/api/dashboard') }}">
-                <img src="{{ asset('images/logo.png') }}" style="border-radius: 50%;"
+                <img src="{{ asset('images/card-logo1.jpeg') }}" style="border-radius: 50%;"
                     class="mr-2" alt="logo" />
                 <span class="brand-text ml-2" style="font-size: 24px; font-weight: bold; color: #4b49ac;">KGMOA</span>
             </a>
