@@ -5,8 +5,8 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Karnataka Government Medical Officers’ Association</title>
-    <link rel="icon" href="{{ asset('images/logo.png') }}" type="image/x-icon">
+    <title>Karnataka Govt Medical Officers’ Association</title>
+    <link rel="icon" href="{{ asset('images/card-logo1.jpeg') }}" type="image/x-icon">
 
     <!-- plugins:css -->
     <link rel="stylesheet" href="{{ asset('vendors/feather/feather.css') }}">
