@@ -72,37 +72,46 @@ class AttendanceController extends Controller
                 return response()->json($response, 404);
             }
     
-            // Find or create an attendance record for this user
-            $attendance = Attendance::firstOrNew(['user_unique_id' => $validated['user_unique_id']]);
-            $attendance->registered_id = $register->id;
+            // Get the last attendance record for the user
+            $lastAttendance = Attendance::where('user_unique_id', $validated['user_unique_id'])->orderBy('created_at', 'desc')->first();
     
             // Define attendance actions for each count
             $attendanceActions = [
-                1 => 'Attendance marked and kit given',
-                2 => 'Breakfast',
-                3 => 'Lunch',
-                4 => 'Dinner',
-                5 => 'Second day breakfast',
-                6 => 'Second day Lunch'
+                1 => 'Attendance marked and kit given. Thank you.',
+                2 => 'Breakfast Taken. Thank you.',
+                3 => 'Lunch Taken. Thank you.',
+                4 => 'Dinner Taken. Thank you.',
+                5 => 'Second Breakfast Taken. Thank you.',
+                6 => 'Second Lunch Taken. Thank you.',
             ];
     
-            // Check and update the attendance count based on the current state
-            if (is_null($attendance->count_attendance)) {
-                // First scan, initialize count_attendance to 1
-                $attendance->count_attendance = 1;
-                $response['message'] = $attendanceActions[1];
-            } elseif ($attendance->count_attendance < 6) {
-                // Increment count_attendance if it's less than 6
-                $attendance->count_attendance += 1;
-                $response['message'] = $attendanceActions[$attendance->count_attendance];
-            } else {
-                // Max count of 6 reached
-                $response['message'] = 'Maximum attendance count reached.';
-                return response()->json($response, 200);  // Success with a message
-            }
+            // If no previous attendance, create a new one with count_attendance = 1
+            if (!$lastAttendance) {
+                $attendance = new Attendance();
+                $attendance->user_unique_id = $validated['user_unique_id'];
+                $attendance->registered_id = $register->id;
+                $attendance->count_attendance = 1; // Start at 1
+                $attendance->scanned_at = now(); // Store the scanned time
+                $attendance->save();
     
-            // Save the updated attendance count
-            $attendance->save();
+                $response['message'] = $attendanceActions[1];
+            } else {
+                // Check if the user has already scanned 6 times
+                if ($lastAttendance->count_attendance >= 6) {
+                    $response['message'] = 'Maximum attendance count reached.';
+                    return response()->json($response, 200);  // Success but max reached
+                }
+    
+                // Otherwise, create a new attendance record with the next count
+                $attendance = new Attendance();
+                $attendance->user_unique_id = $validated['user_unique_id'];
+                $attendance->registered_id = $register->id;
+                $attendance->count_attendance = $lastAttendance->count_attendance + 1; // Increment the attendance count
+                $attendance->scanned_at = now(); // Store the scanned time
+                $attendance->save();
+    
+                $response['message'] = $attendanceActions[$attendance->count_attendance];
+            }
     
             // Successful response with updated attendance data
             $response['status'] = true;
@@ -110,7 +119,7 @@ class AttendanceController extends Controller
                 'user_unique_id' => $attendance->user_unique_id,
                 'count_attendance' => $attendance->count_attendance,
             ];
-            
+    
             return response()->json($response, 200);
     
         } catch (\Exception $e) {
@@ -118,6 +127,7 @@ class AttendanceController extends Controller
             return response()->json($response, 500);  // Internal server error
         }
     }
+    
     
     
 

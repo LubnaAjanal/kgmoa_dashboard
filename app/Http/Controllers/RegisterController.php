@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attendance;
 use App\Models\Register;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +16,7 @@ class RegisterController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = Register::query();
+            $query = Register::with('attendances');
 
             // Apply other query string parameters dynamically
             foreach ($request->query() as $key => $value) {
@@ -132,24 +133,21 @@ class RegisterController extends Controller
      */
     public function show($id)
     {
-        try {
             // Find the register by ID
             $register = Register::findOrFail($id);
 
-            $response = [
-                'status' => true,
-                'data' => $register,
-                'message' => 'User Registered successfully',
-            ];
-            return response()->json($response, 201); // Created
-        } catch (\Exception $e) {
-            $response = [
-                'status' => false,
-                'data' => array(),
-                'message' => 'Error registering user: ' . $e->getMessage(),
-            ];
-            return response()->json($response, 500);
-        }
+
+            if (!$register) {
+                // If no register found, you can return an error or a 404 page
+                abort(404, 'Register not found');
+            }else{
+                $attendance = Attendance::findOrFail($id);
+            }
+            
+            return view('user_details', [
+                'register' => $register,
+                'attendance' => $attendance
+            ]);
     }
 
     /**

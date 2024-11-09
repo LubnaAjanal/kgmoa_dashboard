@@ -10,13 +10,13 @@
         <li class="nav-item">
             <a class="nav-link" href="{{ url('/api/registered-users') }}">
                 <i class="icon-head menu-icon"></i>
-                <span class="menu-title">Total Registereds</span>
+                <span class="menu-title">Total Attendees</span>
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{{ url('/api/user-attendance') }}">
                 <i class="icon-head menu-icon"></i>
-                <span class="menu-title">Total Attendies</span>
+                <span class="menu-title">Scan Me</span>
             </a>
         </li>
         <li class="nav-item">
